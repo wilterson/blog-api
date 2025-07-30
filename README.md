@@ -81,6 +81,11 @@ src/
 
 The API will be available at `http://localhost:3000`
 
+## 🚀 Postman Collection
+
+You can find the Postman collection in the `__tests__/postman` folder.
+Import the collection into Postman and set the environment baseUrl variable to `http://localhost:3000`.
+
 ## 📚 API Endpoints
 
 ### Blog Posts
