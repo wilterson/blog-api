@@ -8,7 +8,14 @@ export class AddCommentToBlogPostUseCase {
         where: { id: postId },
       });
     } catch (error) {
-      throw new Error(`Blog post with id ${postId} not found`);
+      if (
+        error instanceof Error &&
+        error.message.includes("Record to find does not exist")
+      ) {
+        throw new Error(`Blog post with id ${postId} not found`);
+      }
+
+      throw error;
     }
   }
 

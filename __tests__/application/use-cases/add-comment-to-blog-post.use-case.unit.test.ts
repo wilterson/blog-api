@@ -25,12 +25,12 @@ describe("AddCommentToBlogPostUseCase", () => {
         postId,
       });
 
-      prismaMock.blogPost.findUnique.mockResolvedValue(mockBlogPost);
+      prismaMock.blogPost.findUniqueOrThrow.mockResolvedValue(mockBlogPost);
       prismaMock.comment.create.mockResolvedValue(mockComment);
 
       await useCase.execute(postId, commentRequest);
 
-      expect(prismaMock.blogPost.findUnique).toHaveBeenCalledWith({
+      expect(prismaMock.blogPost.findUniqueOrThrow).toHaveBeenCalledWith({
         where: { id: postId },
       });
 
@@ -50,7 +50,9 @@ describe("AddCommentToBlogPostUseCase", () => {
         author: "Test Author",
       };
 
-      prismaMock.blogPost.findUnique.mockResolvedValue(null);
+      prismaMock.blogPost.findUniqueOrThrow.mockRejectedValue(
+        new Error("Record to find does not exist")
+      );
 
       await expect(useCase.execute(postId, commentRequest)).rejects.toThrow(
         `Blog post with id ${postId} not found`
@@ -67,7 +69,7 @@ describe("AddCommentToBlogPostUseCase", () => {
       };
 
       const error = new Error("Database connection failed");
-      prismaMock.blogPost.findUnique.mockRejectedValue(error);
+      prismaMock.blogPost.findUniqueOrThrow.mockRejectedValue(error);
 
       await expect(useCase.execute(postId, commentRequest)).rejects.toThrow(
         "Database connection failed"
@@ -84,7 +86,7 @@ describe("AddCommentToBlogPostUseCase", () => {
       const mockBlogPost = createMockBlogPost({ id: postId });
       const error = new Error("Failed to create comment");
 
-      prismaMock.blogPost.findUnique.mockResolvedValue(mockBlogPost);
+      prismaMock.blogPost.findUniqueOrThrow.mockResolvedValue(mockBlogPost);
       prismaMock.comment.create.mockRejectedValue(error);
 
       await expect(useCase.execute(postId, commentRequest)).rejects.toThrow(
@@ -106,7 +108,7 @@ describe("AddCommentToBlogPostUseCase", () => {
         postId,
       });
 
-      prismaMock.blogPost.findUnique.mockResolvedValue(mockBlogPost);
+      prismaMock.blogPost.findUniqueOrThrow.mockResolvedValue(mockBlogPost);
       prismaMock.comment.create.mockResolvedValue(mockComment);
 
       await useCase.execute(postId, commentRequest);
